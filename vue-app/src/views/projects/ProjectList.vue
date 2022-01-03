@@ -1,31 +1,18 @@
 <script>
 
-import Constants from '@/utils/constants.js';
-import axios from 'axios';
-
 export default {
 	name: "ProjectList",
-	data()
-	{
-		return {
-			projects: []
-		}
-	},
 	mounted()
 	{
-		axios.get(`${Constants.API_URL}/projects`)
-		.then(res =>
-		{
-			this.projects = res.data.map(project =>
-			{
-				project.start_date = new Date(project.start_date);
-				project.end_date = new Date(project.end_date);
-				return project;
-			});
-		})
+		this.$store.dispatch('project/load');
 	},
 	computed:
 	{
+		projects()
+		{
+			return this.$store.state.project.projects;
+		},
+
 		rendered_date: () => (project) =>
 		{
 			const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
@@ -34,7 +21,7 @@ export default {
 				return project.start_date.getDate() + " " + months[project.start_date.getMonth()].substring(0, 3);
 			else
 			return project.start_date.getDate() + " " + months[project.start_date.getMonth()].substring(0, 3) + " - " + project.end_date.getDate() + " " + months[project.end_date.getMonth()].substring(0, 3);
-		}
+		},
 	}
 }
 </script>,

@@ -12,87 +12,97 @@ export default {
 	{
 		return {
 			id: this.$route.params.id,
-			project:
-			{
-				name: "Super Big Maraude",
-				description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus rhoncus laoreet augue, a faucibus neque aliquet nec. Curabitur ultricies metus id urna varius, vel pharetra justo tincidunt.",
-				steps:
-				[
-					{
-						id: 0,
-						name: "Recolte de dons",
-						description: "Installer des stands dans les supermarchés.",
-						objectives:
-						[
-							{
-								name: "Recolter 100L de lait",
-								min: 0,
-								max: 100,
-								value: 100
-							},
-							{
-								name: "Recolter 50kg de pates",
-								min: 0,
-								max: 50,
-								value: 12
-							},
-						]
-					},
-					{
-						id: 1,
-						name: "Step 2",
-						description: "Installer des stands dans les supermarchés.",
-						objectives:
-						[
-							{
-								name: "Recolter 100L de lait",
-								min: 0,
-								max: 100,
-								value: 100
-							},
-							{
-								name: "Recolter 50kg de pates",
-								min: 0,
-								max: 50,
-								value: 12
-							},
-						]
-					},
-				],
-				members: this.$store.state.users,
-				feedbacks:
-				[
-					{
-						id: 0,
-						content: "Super coooool",
-						note: 5,
-						user: this.$store.state.users[0],
-					},
-					{
-						id: 1,
-						content: "Pas ouf...",
-						note: 2,
-						user: this.$store.state.users[0],
-					},
-					{
-						id: 2,
-						content: "Allah u Akbar",
-						note: 4,
-						user: this.$store.state.users[0],
-					}
-				],
-				medias: []
-			},
+			// project:
+			// {
+			// 	name: "Super Big Maraude",
+			// 	description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus rhoncus laoreet augue, a faucibus neque aliquet nec. Curabitur ultricies metus id urna varius, vel pharetra justo tincidunt.",
+			// 	steps:
+			// 	[
+			// 		{
+			// 			id: 0,
+			// 			name: "Recolte de dons",
+			// 			description: "Installer des stands dans les supermarchés.",
+			// 			objectives:
+			// 			[
+			// 				{
+			// 					name: "Recolter 100L de lait",
+			// 					min: 0,
+			// 					max: 100,
+			// 					value: 100
+			// 				},
+			// 				{
+			// 					name: "Recolter 50kg de pates",
+			// 					min: 0,
+			// 					max: 50,
+			// 					value: 12
+			// 				},
+			// 			]
+			// 		},
+			// 		{
+			// 			id: 1,
+			// 			name: "Step 2",
+			// 			description: "Installer des stands dans les supermarchés.",
+			// 			objectives:
+			// 			[
+			// 				{
+			// 					name: "Recolter 100L de lait",
+			// 					min: 0,
+			// 					max: 100,
+			// 					value: 100
+			// 				},
+			// 				{
+			// 					name: "Recolter 50kg de pates",
+			// 					min: 0,
+			// 					max: 50,
+			// 					value: 12
+			// 				},
+			// 			]
+			// 		},
+			// 	],
+			// 	members: this.$store.state.users,
+			// 	feedbacks:
+			// 	[
+			// 		{
+			// 			id: 0,
+			// 			content: "Super coooool",
+			// 			note: 5,
+			// 			user: this.$store.state.users[0],
+			// 		},
+			// 		{
+			// 			id: 1,
+			// 			content: "Pas ouf...",
+			// 			note: 2,
+			// 			user: this.$store.state.users[0],
+			// 		},
+			// 		{
+			// 			id: 2,
+			// 			content: "Allah u Akbar",
+			// 			note: 4,
+			// 			user: this.$store.state.users[0],
+			// 		}
+			// 	],
+			// 	medias: []
+			// },
 			section: "steps",
 			step_refs: []
 		}
 	},
 	computed:
 	{
+		project()
+		{
+			return this.$store.state.project.projects.find(project => project.id == this.id);
+		},
+
 		step_score: () => (step) =>
 		{
-			let max = step.objectives.reduce((tmp, b) => tmp.max + b.max);
-			let values = step.objectives.reduce((tmp, b) => tmp.value + b.value);
+			let max = 0;
+			let values = 0;
+			for (let objective of step.objectives)
+			{
+				max += objective.max;
+				values += objective.value;
+			}
 			return Math.trunc(values * 100 / max);
 		},
 
@@ -120,7 +130,6 @@ export default {
 	{
 		expand(index)
 		{
-			console.log(this.step_refs[index]);
 			if (this.step_refs[index].height == 0)
 				this.step_refs[index].height = this.step_refs[index].el.querySelector('.objectives_container').scrollHeight;
 			else
@@ -131,6 +140,11 @@ export default {
 		{
 			if (el)
 				this.step_refs.push({el: el, height: 0});
+		},
+
+		subscribe()
+		{
+			this.$store.dispatch('project/subscribe')(this.id);
 		}
 	},
 	beforeUpdate()
@@ -143,7 +157,7 @@ export default {
 <template>
 	<div class="project_view">
 			<h1>{{ project.name }}</h1>
-			<p class="status">{{ project.status }}</p>
+			<!-- <p class="status">{{ project.status }}</p> -->
 			<p class="description">{{ project.description }}</p>
 			<div class="subscribe_button" v-if="!is_subscribed">S'inscrire</div>
 			<div class="unsubscribe_button" v-else>Se désinscrire</div>
@@ -262,6 +276,11 @@ h1
 	flex-direction: column;
 	border-bottom: solid 1px #00000033;
 	padding: 0.5rem 0;
+}
+
+.step:last-child
+{
+	border-bottom: none;
 }
 
 .step .infos
