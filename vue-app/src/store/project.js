@@ -15,6 +15,13 @@ export default {
 		SET_PROJECTS(state, projects)
 		{
 			state.projects = projects;
+		},
+
+		SET_PROJECT(state, {project_id, project})
+		{
+			let index = state.projects.findIndex(project => project.id == project_id);
+			if (index !== -1)
+				state.projects[index] = project;
 		}
 	},
 
@@ -37,16 +44,42 @@ export default {
 
 		subscribe(store, project_id)
 		{
-			axios.post(`${Constants.API_URL}/projects/${project_id}/members`)
-			.then(res =>
+			return new Promise((resolve, reject) =>
 			{
-				
-				resolve();
+				axios.post(`${Constants.API_URL}/projects/${project_id}/members`)
+				.then(res =>
+				{
+					store.commit('SET_PROJECT', {project_id, project: res.data})
+					resolve();
+				})
+				.catch(err =>
+				{
+					if (err.response)
+						reject(err.response.data.message);
+					else
+						reject("Unknown error");
+				})
 			})
-			.catch(err =>
+		},
+
+		unsubscribe(store, project_id)
+		{
+			return new Promise((resolve, reject) =>
 			{
-				alert(err.status);
+				axios.delete(`${Constants.API_URL}/projects/${project_id}/members`)
+				.then(res =>
+				{
+					store.commit('SET_PROJECT', {project_id, project: res.data})
+					resolve();
+				})
+				.catch(err =>
+				{
+					if (err.response)
+						reject(err.response.data.message);
+					else
+						reject("Unknown error");
+				})
 			})
-		}
+		},
 	}
 };

@@ -47,9 +47,6 @@ export class User extends BaseEntity
 	@OneToMany(() => Message, message => message.sender)
 	messages: Message[];
 
-	@ManyToMany(() => ProjectStep, step => step.members)
-	project_steps: ProjectStep[];
-
 	@OneToMany(() => ProjectFeedback, feedback => feedback.user)
 	feedbacks: ProjectFeedback[];
 }

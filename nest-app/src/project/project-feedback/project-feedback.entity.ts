@@ -14,6 +14,9 @@ export class ProjectFeedback extends BaseEntity
 	@Column()
 	note: number;
 
+	@Column()
+	is_anonyme: Boolean;
+
 	@CreateDateColumn()
 	date: Date;
 

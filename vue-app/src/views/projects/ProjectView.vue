@@ -144,8 +144,14 @@ export default {
 
 		subscribe()
 		{
-			this.$store.dispatch('project/subscribe')(this.id);
-		}
+			this.$store.dispatch('project/subscribe', this.id)
+			.catch(err => alert(err));
+		},
+
+		unsubscribe()
+		{
+			this.$store.dispatch('project/unsubscribe', this.id);
+		},
 	},
 	beforeUpdate()
 	{
@@ -159,8 +165,8 @@ export default {
 			<h1>{{ project.name }}</h1>
 			<!-- <p class="status">{{ project.status }}</p> -->
 			<p class="description">{{ project.description }}</p>
-			<div class="subscribe_button" v-if="!is_subscribed">S'inscrire</div>
-			<div class="unsubscribe_button" v-else>Se désinscrire</div>
+			<div class="subscribe_button" @click="subscribe" v-if="!is_subscribed">S'inscrire</div>
+			<div class="unsubscribe_button" @click="unsubscribe" v-else>Se désinscrire</div>
 			<div class="nav">
 				<p :class="{selected: section == 'steps'}" @click="section = 'steps'">Etapes</p>
 				<p :class="{selected: section == 'members'}" @click="section = 'members'">Membres</p>
@@ -191,19 +197,20 @@ export default {
 				<div class="feedbacks_container">
 					<div class="feedback" v-for="feedback in project.feedbacks">
 						<div class="header">
-							<div class="user">
+							<div class="user" v-if="!feedback.is_anonyme">
 								<div class="photo_container">
 									<img :src="feedback.user.photo"/>
 								</div>
 								<div class="name">{{ feedback.user.username }}</div>
 							</div>
+							<div v-else>Anonyme</div>
 							<div class="note_container">
 								<div class="note" :class="{active: i <= feedback.note}" v-for="i in 5">
 									<svg fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M10.788 3.103c.495-1.004 1.926-1.004 2.421 0l2.358 4.777 5.273.766c1.107.161 1.549 1.522.748 2.303l-3.816 3.72.901 5.25c.19 1.103-.968 1.944-1.959 1.424l-4.716-2.48-4.715 2.48c-.99.52-2.148-.32-1.96-1.424l.901-5.25-3.815-3.72c-.801-.78-.359-2.142.748-2.303L8.43 7.88l2.358-4.777Z"/></svg>
 								</div>
 							</div>
 						</div>
-						<p>{{ feedback.content }}</p>
+						<p>{{ feedback.comment }}</p>
 					</div>
 				</div>
 			</section>
@@ -372,17 +379,13 @@ h2
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
+	font-weight: 500;
 }
 
 .feedback .user
 {
 	display: flex;
 	align-items: center;
-}
-
-.feedback .user .name
-{
-	font-weight: 500;
 }
 
 .feedback .photo_container

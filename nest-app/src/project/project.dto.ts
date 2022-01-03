@@ -1,5 +1,5 @@
 import { Type } from "class-transformer";
-import { ArrayMinSize, IsArray, IsDate, IsDefined, IsNotEmpty, ValidateNested } from "class-validator";
+import { ArrayMinSize, IsArray, IsBoolean, IsDate, IsDefined, IsNotEmpty, IsNumber, IsPositive, Max, Min, ValidateNested } from "class-validator";
 
 class ProjectObjectiveDTO
 {
@@ -67,4 +67,23 @@ export class CreateProjectDTO
 	@Type(() => ProjectStepDTO)
 	@ArrayMinSize(1)
 	steps: ProjectStepDTO[];
+}
+
+export class AddFeedbackDTO
+{
+	@IsDefined()
+	@IsNotEmpty()
+	comment: string;
+
+	@IsDefined()
+	@IsNotEmpty()
+	@IsNumber()
+	@Min(1)
+	@Max(5)
+	note: number;
+
+	@IsDefined()
+	@IsNotEmpty()
+	@IsBoolean()
+	is_anonyme: Boolean;
 }
