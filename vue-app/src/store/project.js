@@ -54,7 +54,7 @@ export default {
 				})
 				.catch(err =>
 				{
-					if (err.response.data)
+					if (err.response)
 						reject(err.response.data.message);
 					else
 						reject("Unknown error");
@@ -74,7 +74,7 @@ export default {
 				})
 				.catch(err =>
 				{
-					if (err.response.data)
+					if (err.response)
 						reject(err.response.data.message);
 					else
 						reject("Unknown error");
