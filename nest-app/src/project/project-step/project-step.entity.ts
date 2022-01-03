@@ -28,10 +28,6 @@ export class ProjectStep extends BaseEntity
 	@Column()
 	status: 'NOT_STARTED' | 'IN_PROGRESS' | 'FINISHED';
 
-	@ManyToMany(() => User, user => user.project_steps)
-	@JoinTable()
-	members: User[];
-
 	@ManyToOne(() => Project, project => project.steps, {onDelete: 'CASCADE'})
 	project: Project;
 
