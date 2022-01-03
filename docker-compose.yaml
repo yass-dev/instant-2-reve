@@ -1,0 +1,54 @@
+version: '3.7'
+
+services:
+    nest_app:
+        container_name: nest_app
+        build:
+            context: nest-app
+        volumes:
+            - ./nest-app/src:/usr/src/app/src
+            - ./nest-app/uploads:/usr/src/app/uploads
+        ports:
+            - 3000:3000
+            - 3001:3001
+        command: npm run start:dev
+        depends_on: 
+            - database
+
+    vue_app:
+        container_name: vue_app
+        build:
+            context: vue-app
+        volumes:
+            - ./vue-app/src:/usr/src/app/src
+        ports:
+            - 8080:8080
+        command: npm run serve
+        depends_on: 
+            - nest_app
+
+    phpmyadmin:
+        container_name: phpmyadmin
+        image: phpmyadmin
+        restart: always
+        ports:
+            - 8000:80
+        environment: 
+            - PMA_HOST=database
+            - MYSQL_ROOT_PASSWORD=root_pass
+        depends_on: 
+            - database
+
+    database:
+        container_name: database
+        image: mysql:8.0
+        restart: always
+        environment:
+            - MYSQL_DATABASE=instant2reve
+            - MYSQL_USER=user
+            - MYSQL_PASSWORD=password
+            - MYSQL_ROOT_PASSWORD=password
+        expose:
+            - '3306'
+        volumes:
+            - ./db_data:/var/lib/mysql
