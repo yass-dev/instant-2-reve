@@ -16,20 +16,25 @@ export class ProjectService
 				@InjectRepository(ProjectObjective) private objective_repository: Repository<ProjectObjective>,
 				@InjectRepository(ProjectFeedback) private feedback_repository: Repository<ProjectFeedback>) {}
 
-	async getAll()
+	async getAll(): Promise<Project[]>
 	{
-		return await this.repository.createQueryBuilder('project')
+		let projects = await this.repository.createQueryBuilder('project')
 		.leftJoinAndSelect('project.steps', 'steps')
 		.leftJoinAndSelect('project.members', 'project_members')
 		.leftJoinAndSelect('project.feedbacks', 'feedbacks')
 		.leftJoinAndSelect('feedbacks.user', 'feedbacks_user')
 		.leftJoinAndSelect('steps.objectives', 'objectives')
 		.getMany();
+
+		for (let project of projects)
+			project = this.removeAnonymeFeedbacks(project);
+
+		return projects;
 	}
 
 	async getOneById(id: number)
 	{
-		return await this.repository.createQueryBuilder('project')
+		let project = await this.repository.createQueryBuilder('project')
 		.leftJoinAndSelect('project.steps', 'steps')
 		.leftJoinAndSelect('project.members', 'project_members')
 		.leftJoinAndSelect('project.feedbacks', 'feedbacks')
@@ -37,6 +42,10 @@ export class ProjectService
 		.leftJoinAndSelect('steps.objectives', 'objectives')
 		.where('project.id = :id', {id: id})
 		.getOne();
+
+		project = this.removeAnonymeFeedbacks(project);
+
+		return project
 	}
 
 	async createProject(project_dto: CreateProjectDTO)
@@ -100,5 +109,13 @@ export class ProjectService
 		feedback.project = project;
 		feedback.is_anonyme = fb.is_anonyme;
 		feedback = await this.feedback_repository.save(feedback);
+	}
+
+	removeAnonymeFeedbacks(project: Project): Project
+	{
+		for (let feedback of project.feedbacks)
+			if (feedback.is_anonyme)
+				delete feedback.user;
+		return project;
 	}
 }

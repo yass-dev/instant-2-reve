@@ -3,6 +3,7 @@ import { JwtService } from '@nestjs/jwt';
 import { access } from 'fs';
 import { User } from 'src/user/user.entity';
 import { UserService } from 'src/user/user.service';
+import { RegisterDTO } from './auth.dto';
 
 @Injectable()
 export class AuthService
@@ -38,5 +39,10 @@ export class AuthService
 		if (!user)
 			throw new UnauthorizedException();
 		return user;
+	}
+
+	async register(u: RegisterDTO)
+	{
+		await this.user_service.create(u);
 	}
 }

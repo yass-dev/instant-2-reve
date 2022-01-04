@@ -1,4 +1,5 @@
 import Constants from '@/utils/constants.js';
+import ProjectService from '@/services/project.service.js';
 import axios from 'axios';
 
 export default {
@@ -32,12 +33,7 @@ export default {
 			axios.get(`${Constants.API_URL}/projects`)
 			.then(res =>
 			{
-				let projects = res.data.map(project =>
-				{
-					project.start_date = new Date(project.start_date);
-					project.end_date = new Date(project.end_date);
-					return project;
-				});
+				let projects = res.data.map(ProjectService.fixProject);
 				store.commit("SET_PROJECTS", projects);
 			})
 		},
@@ -49,7 +45,8 @@ export default {
 				axios.post(`${Constants.API_URL}/projects/${project_id}/members`)
 				.then(res =>
 				{
-					store.commit('SET_PROJECT', {project_id, project: res.data})
+					let project = ProjectService.fixProject(res.data);
+					store.commit('SET_PROJECT', {project_id, project})
 					resolve();
 				})
 				.catch(err =>
@@ -69,7 +66,8 @@ export default {
 				axios.delete(`${Constants.API_URL}/projects/${project_id}/members`)
 				.then(res =>
 				{
-					store.commit('SET_PROJECT', {project_id, project: res.data})
+					let project = ProjectService.fixProject(res.data);
+					store.commit('SET_PROJECT', {project_id, project})
 					resolve();
 				})
 				.catch(err =>
@@ -81,5 +79,26 @@ export default {
 				})
 			})
 		},
+
+		addFeedback(store, {project_id, note, comment, is_anonyme})
+		{
+			return new Promise((resolve, reject) =>
+			{
+				axios.post(`${Constants.API_URL}/projects/${project_id}/feedbacks`, {note, comment, is_anonyme})
+				.then(res =>
+				{
+					let project = ProjectService.fixProject(res.data);
+					store.commit('SET_PROJECT', {project_id, project})
+					resolve();
+				})
+				.catch(err =>
+				{
+					if (err.response)
+						reject(err.response.data.message);
+					else
+						reject("Unknown error");
+				})
+			})
+		}
 	}
 };

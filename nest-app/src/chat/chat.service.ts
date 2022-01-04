@@ -17,12 +17,14 @@ export class ChatService
 	{
 		let chats = await this.user_service.getChats(user_id);
 		let ids = chats.map(chat => chat.id);
+		if (ids.length == 0)
+			return [];
 
 		chats = await this.repository.createQueryBuilder("chat")
 		.leftJoinAndSelect('chat.members', 'members')
 		.leftJoinAndSelect('chat.messages', 'messages')
 		.leftJoinAndSelect('messages.sender', 'sender')
-		.where('chat.id IN (:...ids)', {ids: ids})
+		.where('chat.id IN (:...ids)', {ids: ids.length > 0 ? ids : [-1]})
 		.getMany();
 
 		for (let chat of chats)
