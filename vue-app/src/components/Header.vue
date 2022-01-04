@@ -2,6 +2,13 @@
 
 export default {
 	name: "Header",
+	computed:
+	{
+		user_photo()
+		{
+			return this.$store.state.user.photo;
+		}
+	}
 }
 </script>
 
@@ -12,7 +19,7 @@ export default {
 		</div>
 		<router-link to="/profile" class="profile_button">
 			<div class="profile_photo">
-				<!-- <img src="/logo.png"/> -->
+				<img :src="user_photo"/>
 			</div>
 		</router-link>
 	</header>
@@ -26,8 +33,8 @@ header
 	justify-content: space-between;
 	padding: 0.75rem 1rem;
 	width: 100%;
-	color: #51A1FF;
-	background: white;
+	background: #51A1FF;
+	color: white;
 }
 
 .left
@@ -53,7 +60,6 @@ header
 	height: 2rem;
 	overflow: hidden;
 	border-radius: 100%;
-	background: #51A1FF;
 	cursor: pointer;
 }
 

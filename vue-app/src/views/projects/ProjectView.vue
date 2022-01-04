@@ -1,6 +1,7 @@
 <script>
 
 import mapState from 'vuex';
+import BackButton from '../../components/BackButton.vue';
 import CollapsibleSection from '../../components/CollapsibleSection.vue';
 import Header from '../../components/Header.vue';
 import FeedbackModal from '../../components/project/FeedbackModal.vue';
@@ -10,7 +11,7 @@ import UserList from '../../components/UserList.vue';
 
 export default {
 	name: "ProjectView",
-	components: {CollapsibleSection, Header, UserList, FeedbackView, StepView, FeedbackModal},
+	components: {CollapsibleSection, Header, UserList, FeedbackView, StepView, FeedbackModal, BackButton},
 	data()
 	{
 		return {
@@ -49,6 +50,7 @@ export default {
 
 <template>
 	<div class="project_view">
+			<BackButton :text="`Tous les projets`"/>
 			<h1>{{ project.name }}</h1>
 			<!-- <p class="status">{{ project.status }}</p> -->
 			<p class="description">{{ project.description }}</p>
@@ -70,7 +72,7 @@ export default {
 			<section v-if="section == 'feedbacks'">
 				<h2>Feedbacks</h2>
 				<FeedbackView :feedbacks="project.feedbacks"></FeedbackView>
-				<div class="add_feedback_button" @click="show_feedback_modal = true">Ajouter un feedback</div>
+				<div class="add_feedback_button" @click="show_feedback_modal = true" v-if="is_subscribed">Ajouter un feedback</div>
 			</section>
 			<FeedbackModal :project_id="project.id" @close="show_feedback_modal = false" v-if="show_feedback_modal"></FeedbackModal>
 		</div>
@@ -83,6 +85,11 @@ export default {
 	display: flex;
 	flex-direction: column;
 	padding: 0.5rem 1rem;
+}
+
+.back_button
+{
+	color: #52a1ff;
 }
 
 h1

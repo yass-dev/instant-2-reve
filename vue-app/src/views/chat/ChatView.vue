@@ -335,7 +335,6 @@ form
 	display: flex;
 	align-items: center;
 	position: relative;
-	z-index: 1;
 }
 
 form .message_bar

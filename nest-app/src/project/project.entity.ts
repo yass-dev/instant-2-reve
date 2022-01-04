@@ -31,6 +31,6 @@ export class Project extends BaseEntity
 	@OneToMany(() => ProjectStep, step => step.project, {cascade: true})
 	steps: ProjectStep[];
 
-	@OneToMany(() => ProjectFeedback, feedback => feedback.project)
+	@OneToMany(() => ProjectFeedback, feedback => feedback.project, {cascade: true})
 	feedbacks: ProjectFeedback[];
 }

@@ -31,6 +31,6 @@ export class ProjectStep extends BaseEntity
 	@ManyToOne(() => Project, project => project.steps, {onDelete: 'CASCADE'})
 	project: Project;
 
-	@OneToMany(() => ProjectObjective, objective => objective.step)
+	@OneToMany(() => ProjectObjective, objective => objective.step, {cascade: true})
 	objectives: ProjectObjective[];
 }

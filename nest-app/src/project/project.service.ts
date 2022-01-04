@@ -48,7 +48,7 @@ export class ProjectService
 		return project
 	}
 
-	async createProject(project_dto: CreateProjectDTO)
+	async createProject(project_dto: CreateProjectDTO): Promise<Project>
 	{
 		let project = new Project;
 		project.name = project_dto.name;
@@ -80,24 +80,24 @@ export class ProjectService
 			step = await this.step_repository.save(step);
 			project.steps.push(step);
 		}
-		await this.repository.save(project);
+		return await this.repository.save(project);
 	}
 
-	async addMember(project: Project, user: User)
+	async addMember(project: Project, user: User): Promise<Project>
 	{
 		if (project.members.find(member => member.id == user.id) !== undefined)
 			throw new ConflictException("You are already registered to this project.");
 		project.members.push(user);
-		await this.repository.save(project);
+		return await this.repository.save(project);
 	}
 
-	async removeMember(project: Project, user: User)
+	async removeMember(project: Project, user: User): Promise<Project>
 	{
 		let index = project.members.findIndex(member => member.id == user.id);
 		if (index === -1)
 			throw new NotFoundException("User not found in project members");
 		project.members.splice(index, 1);
-		await this.repository.save(project);
+		return await this.repository.save(project);
 	}
 
 	async addFeedback(project: Project, user: User, fb: AddFeedbackDTO)

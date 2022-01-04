@@ -18,11 +18,16 @@ export default {
 			state.projects = projects;
 		},
 
-		SET_PROJECT(state, {project_id, project})
+		SET_PROJECT(state, project)
 		{
-			let index = state.projects.findIndex(project => project.id == project_id);
+			let index = state.projects.findIndex(p => p.id == project.id);
 			if (index !== -1)
 				state.projects[index] = project;
+		},
+
+		ADD_PROJECT(state, project)
+		{
+			state.projects.unshift(project);
 		}
 	},
 
@@ -46,7 +51,7 @@ export default {
 				.then(res =>
 				{
 					let project = ProjectService.fixProject(res.data);
-					store.commit('SET_PROJECT', {project_id, project})
+					store.commit('SET_PROJECT', project)
 					resolve();
 				})
 				.catch(err =>
@@ -67,7 +72,7 @@ export default {
 				.then(res =>
 				{
 					let project = ProjectService.fixProject(res.data);
-					store.commit('SET_PROJECT', {project_id, project})
+					store.commit('SET_PROJECT', project)
 					resolve();
 				})
 				.catch(err =>
@@ -88,7 +93,7 @@ export default {
 				.then(res =>
 				{
 					let project = ProjectService.fixProject(res.data);
-					store.commit('SET_PROJECT', {project_id, project})
+					store.commit('SET_PROJECT', project)
 					resolve();
 				})
 				.catch(err =>

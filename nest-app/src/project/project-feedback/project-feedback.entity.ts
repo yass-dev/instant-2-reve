@@ -23,6 +23,6 @@ export class ProjectFeedback extends BaseEntity
 	@ManyToOne(() => User, user => user.feedbacks)
 	user: User;
 
-	@ManyToOne(() => Project, project => project.feedbacks)
+	@ManyToOne(() => Project, project => project.feedbacks, {onDelete: 'CASCADE'})
 	project: Project;
 }

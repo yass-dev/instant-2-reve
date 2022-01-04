@@ -1,12 +1,11 @@
 import { createStore } from 'vuex';
 import axios from 'axios';
-import io from 'socket.io-client';
 
 import Constants from '@/utils/constants.js';
 import ProjectStore from '@/store/project.js';
 import ChatStore from '@/store/chat.js';
-import constants from '../utils/constants';
 import ChatService from '@/services/chat.service';
+import ProjectService from '../services/project.service';
 
 export default createStore(
 {
@@ -16,6 +15,7 @@ export default createStore(
 		access_token: null,
 
 		chat_socket: null,
+		project_socket: null,
 
 		// Logged in user
 		user: {
@@ -62,6 +62,11 @@ export default createStore(
 		SET_CHAT_SOCKET(state, socket)
 		{
 			state.chat_socket = socket;
+		},
+
+		SET_PROJECT_SOCKET(state, socket)
+		{
+			state.project_socket = socket;
 		}
 	},
 
@@ -69,31 +74,8 @@ export default createStore(
 	{
 		initSockets(store)
 		{
-			let socketOptions =
-			{
-				transportOptions:
-				{
-					polling:
-					{
-						extraHeaders: { Authorization: `Bearer ${store.state.access_token}`,}
-					}
-				}
-			};
-
-			let chat_socket = io(`${constants.API_URL}/chat`, socketOptions);
-
-			chat_socket.on('new_chat', ({chat}) =>
-			{
-				chat = ChatService.fixChat(chat, store.state.user.id);
-				store.commit('chat/ADD_CHAT', chat);
-			})
-
-			chat_socket.on('new_message', ({chat_id, message}) =>
-			{
-				store.commit('chat/ADD_MESSAGE', {chat_id, message});
-			})
-
-			store.commit("SET_CHAT_SOCKET", chat_socket);
+			ChatService.initWebsocket(store);
+			ProjectService.initWebsocket(store);
 		},
 
 		disconnectSockets()
@@ -115,7 +97,7 @@ export default createStore(
 				})
 				.catch(err =>
 				{
-					reject(err.response.data.message);
+					reject(err);
 				})
 			})
 		},

@@ -11,6 +11,7 @@ import ChatView from '../views/chat/ChatView.vue';
 import CreateChat from '../views/chat/CreateChat.vue';
 import CreateGroup from '../views/chat/CreateGroup.vue';
 import ChatInfos from '../views/chat/ChatInfos.vue';
+import ChatBase from '../views/chat/ChatBase.vue';
 
 const routes = [
 	{
@@ -59,41 +60,50 @@ const routes = [
 		]
 	},
 	{
+		path: '/chat',
+		name: 'chat',
+		component: ChatBase,
+		meta: { requiresAuth: true },
+		children:
+		[
+			{
+				path: '',
+				name: 'ChatList',
+				component: ChatList,
+				meta: { requiresAuth: true }
+			},
+			{
+				path: ':id',
+				name: 'chat_view',
+				component: ChatView,
+				meta: { requiresAuth: true }
+			},
+			{
+				path: ':id/infos',
+				name: 'chat_infos',
+				component: ChatInfos,
+				meta: { requiresAuth: true }
+			},
+			{
+				path: 'new',
+				name: 'create_chat',
+				component: CreateChat,
+				meta: { requiresAuth: true }
+			},
+			{
+				path: 'new/group',
+				name: 'create_group',
+				component: CreateGroup,
+				meta: { requiresAuth: true },
+				props: true
+			},
+		]
+	},
+	{
 		path: '/files',
 		name: 'files',
 		component: Home,
 		meta: { requiresAuth: true }
-	},
-	{
-		path: '/chat',
-		name: 'chats',
-		component: ChatList,
-		meta: { requiresAuth: true }
-	},
-	{
-		path: '/chat/:id',
-		name: 'chat_view',
-		component: ChatView,
-		meta: { requiresAuth: true }
-	},
-	{
-		path: '/chat/:id/infos',
-		name: 'chat_infos',
-		component: ChatInfos,
-		meta: { requiresAuth: true }
-	},
-	{
-		path: '/chat/new',
-		name: 'create_chat',
-		component: CreateChat,
-		meta: { requiresAuth: true }
-	},
-	{
-		path: '/chat/new/group',
-		name: 'create_group',
-		component: CreateGroup,
-		meta: { requiresAuth: true },
-		props: true
 	},
 	{
 		path: '/profile',
