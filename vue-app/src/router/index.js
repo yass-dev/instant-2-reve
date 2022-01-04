@@ -3,7 +3,7 @@ import Home from '@/views/Home.vue';
 import store from '@/store/index.js';
 import Login from '@/views/Login.vue';
 import ProjectBase from '@/views/projects/ProjectBase.vue';
-import ProjectList from '../views/projects/ProjectList.vue';
+import ProjectListView from '../views/projects/ProjectListView.vue';
 import CreateProjectView from '../views/projects/CreateProjectView.vue';
 import ProjectView from '../views/projects/ProjectView.vue';
 import ChatList from '../views/chat/ChatList.vue';
@@ -12,6 +12,7 @@ import CreateChat from '../views/chat/CreateChat.vue';
 import CreateGroup from '../views/chat/CreateGroup.vue';
 import ChatInfos from '../views/chat/ChatInfos.vue';
 import ChatBase from '../views/chat/ChatBase.vue';
+import UserView from '../views/UserView.vue';
 
 const routes = [
 	{
@@ -41,7 +42,7 @@ const routes = [
 			{
 				path: '',
 				name: "ProjectList",
-				component: ProjectList,
+				component: ProjectListView,
 				meta: { requiresAuth: true }
 			},
 			{
@@ -98,6 +99,12 @@ const routes = [
 				props: true
 			},
 		]
+	},
+	{
+		path: '/users/:id',
+		name: 'user_view',
+		component: UserView,
+		meta : { requiresAuth: true }
 	},
 	{
 		path: '/files',

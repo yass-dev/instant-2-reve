@@ -26,6 +26,9 @@ export class User extends BaseEntity
 	@Column({select: false})
 	password: string;
 
+	@Column({type: 'text'})
+	biography: string;
+
 	@Column()
 	photo: string;
 

@@ -16,6 +16,7 @@ export default {
 		SET_PROJECTS(state, projects)
 		{
 			state.projects = projects;
+			console.log("PROJECTS => ", projects);
 		},
 
 		SET_PROJECT(state, project)

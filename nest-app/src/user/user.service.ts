@@ -54,6 +54,7 @@ export class UserService
 		user.password = u.password;
 		user.photo = "https://img2.freepng.fr/20180626/fhs/kisspng-avatar-user-computer-icons-software-developer-5b327cc98b5780.5684824215300354015708.jpg";
 		user.is_admin = false;
+		user.biography = u.biography;
 		await this.repository.save(user);
 	}
 }

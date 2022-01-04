@@ -21,15 +21,6 @@ export default {
 			this.$store.dispatch('login', {username: this.username, password: this.password})
 			.then(() =>
 			{
-				axios.interceptors.request.use((config) =>
-				{
-					config.headers['Authorization'] = "Bearer " + this.$store.state.access_token;
-					return config;
-				},
-				(error) =>
-				{
-					return Promise.reject(error);
-				});
 				this.$router.push("/")
 			})
 			.catch(err =>

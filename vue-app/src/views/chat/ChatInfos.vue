@@ -51,12 +51,12 @@ export default {
 		<section class="members">
 			<p>{{ chat.members.length }} participants</p>
 			<div class="members_list">
-				<div class="member" v-for="member in members">
+				<router-link class="member" v-for="member in members" :to="`/users/${member.id}`">
 					<div class="photo_container">
 						<img :src="member.photo"/>
 					</div>
 					<div>{{ member.username }}</div>
-				</div>
+				</router-link>
 				<div class="show_members_button" @click="show_all_members = true" v-if="!show_all_members && chat.members.length - limit > 0">Tout voir ( {{ chat.members.length - limit }} )</div>
 				<div class="show_members_button" @click="show_all_members = false" v-if="show_all_members && chat.members.length - limit > 0">Masquer</div>
 			</div>

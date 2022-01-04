@@ -23,4 +23,8 @@ export class RegisterDTO
 	@IsNotEmpty()
 	password: string;
 
+	@IsDefined()
+	@IsNotEmpty()
+	biography: string;
+
 }

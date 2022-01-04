@@ -14,7 +14,7 @@ export default {
 
 <template>
 	<div class="user_list">
-		<div class="item" v-for="user in users">
+		<router-link class="item" v-for="user in users" :to="`/users/${user.id}`" :key="`user_${user.id}`">
 			<div class="photo_container">
 				<img :src="user.photo"/>
 			</div>
@@ -23,7 +23,7 @@ export default {
 				<p class="biography">{{ user.biography }}</p>
 			</div>
 			<div></div>
-		</div>
+		</router-link>
 	</div>
 </template>
 

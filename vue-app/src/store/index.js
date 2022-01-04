@@ -92,7 +92,17 @@ export default createStore(
 				{
 					store.commit("SET_LOGGED_IN", res.data.access_token);
 					store.commit("SET_USER", res.data.user);
+					axios.interceptors.request.use((config) =>
+					{
+						config.headers['Authorization'] = "Bearer " + store.state.access_token;
+						return config;
+					},
+					(error) =>
+					{
+						return Promise.reject(error);
+					});
 					store.dispatch('initSockets');
+					store.dispatch('project/load');
 					resolve();
 				})
 				.catch(err =>
